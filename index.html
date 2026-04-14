@@ -1,0 +1,984 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Địa Lý — Tài Liệu Ôn Thi</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #1a1209;
+        --primary: #b45309;
+        --accent: #d97706;
+        --light: #fef9f0;
+        --muted: #78716c;
+        --border: #e7e0d5;
+        --card-bg: #fffdf9;
+        --radius: 16px;
+        --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--light);
+        color: var(--ink);
+        font-family: "DM Sans", sans-serif;
+        overflow-x: hidden;
+      }
+      .hero {
+        height: 50vh;
+        background:
+          linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.4)),
+          url("https://images.unsplash.com/photo-1528127269322-539801943592?q=80&w=2000");
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        text-align: center;
+        clip-path: ellipse(150% 100% at 50% 0%);
+      }
+      .hero h1 {
+        font-size: clamp(2rem, 6vw, 4rem);
+        font-weight: 800;
+        letter-spacing: -1px;
+      }
+      .controls-wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 32px 24px 0;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+      .search-box {
+        flex: 1;
+        min-width: 220px;
+        height: 48px;
+        padding: 0 20px;
+        border-radius: 99px;
+        border: 1.5px solid var(--border);
+        background: white;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.2s;
+        color: var(--ink);
+      }
+      .search-box:focus {
+        border-color: var(--accent);
+      }
+      .search-box::placeholder {
+        color: #bfb9b0;
+      }
+      .filter-btn {
+        height: 48px;
+        padding: 0 22px;
+        border-radius: 99px;
+        border: 1.5px solid var(--border);
+        background: white;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.25s var(--ease);
+        white-space: nowrap;
+      }
+      .filter-btn:hover {
+        border-color: var(--accent);
+        color: var(--primary);
+      }
+      .filter-btn.active {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: white;
+      }
+      .result-count {
+        width: 100%;
+        margin-top: 10px;
+        font-size: 0.82rem;
+        color: var(--muted);
+        padding-left: 4px;
+      }
+      .main-content {
+        max-width: 1200px;
+        margin: 32px auto 80px;
+        padding: 0 24px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+      }
+      .card {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        overflow: hidden;
+        cursor: pointer;
+        transition:
+          transform 0.35s var(--ease),
+          box-shadow 0.35s var(--ease);
+        display: flex;
+        flex-direction: column;
+        animation: fadeUp 0.5s var(--ease) both;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 48px rgba(26, 18, 9, 0.12);
+      }
+      .card-img-wrapper {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+      }
+      .card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.7s var(--ease);
+        display: block;
+      }
+      .card:hover img {
+        transform: scale(1.07);
+      }
+      .card-img-wrapper::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(26, 18, 9, 0.35) 0%,
+          transparent 55%
+        );
+        pointer-events: none;
+      }
+      .region-tag {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        z-index: 2;
+        background: white;
+        color: var(--primary);
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 4px 12px;
+        border-radius: 99px;
+        border: 1px solid rgba(180, 83, 9, 0.2);
+      }
+      .card-body {
+        padding: 20px 22px 24px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .card-body h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        line-height: 1.3;
+        margin-bottom: 8px;
+        color: var(--ink);
+      }
+      .card-body p {
+        color: var(--muted);
+        font-size: 0.88rem;
+        line-height: 1.65;
+        flex: 1;
+      }
+      .card-cta {
+        margin-top: 16px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--primary);
+        letter-spacing: 0.04em;
+      }
+      .card-cta svg {
+        transition: transform 0.2s;
+      }
+      .card:hover .card-cta svg {
+        transform: translateX(4px);
+      }
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(26, 18, 9, 0.85);
+        backdrop-filter: blur(8px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+        opacity: 0;
+        transition: opacity 0.35s;
+      }
+      .modal.active {
+        display: flex;
+        opacity: 1;
+      }
+      .modal-content {
+        background: var(--card-bg);
+        width: 95%;
+        max-width: 940px;
+        max-height: 90vh;
+        border-radius: 24px;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        position: relative;
+        animation: slideUp 0.4s var(--ease);
+        border: 1px solid var(--border);
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(40px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .modal-left img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .modal-right {
+        padding: 44px 40px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+      }
+      .m-badge {
+        display: inline-block;
+        background: rgba(180, 83, 9, 0.1);
+        color: var(--primary);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        padding: 5px 14px;
+        border-radius: 99px;
+        margin-bottom: 16px;
+        align-self: flex-start;
+      }
+      #m-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.9rem;
+        line-height: 1.2;
+        margin-bottom: 16px;
+        color: var(--ink);
+      }
+      #m-desc {
+        color: var(--muted);
+        font-size: 0.94rem;
+        line-height: 1.75;
+        flex: 1;
+      }
+      #m-link {
+        margin-top: 28px;
+        display: block;
+        text-decoration: none;
+      }
+      #m-link button {
+        width: 100%;
+        padding: 16px 24px;
+        border-radius: 12px;
+        border: none;
+        background: var(--ink);
+        color: white;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.25s,
+          transform 0.2s;
+        letter-spacing: 0.02em;
+      }
+      #m-link button:hover {
+        background: var(--primary);
+        transform: scale(1.02);
+      }
+      .close-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 36px;
+        height: 36px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+        font-size: 1rem;
+        color: var(--muted);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--border);
+        transition: color 0.2s;
+      }
+      .close-btn:hover {
+        color: var(--ink);
+      }
+      #backToTop {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        z-index: 999;
+        display: none;
+      }
+      #backToTop a {
+        width: 44px;
+        height: 44px;
+        background: var(--ink);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        text-decoration: none;
+        transition:
+          transform 0.2s,
+          background 0.2s;
+        color: white;
+        font-size: 1.1rem;
+      }
+      #backToTop a:hover {
+        transform: translateY(-3px);
+        background: var(--primary);
+      }
+      .empty {
+        grid-column: 1/-1;
+        text-align: center;
+        padding: 80px 20px;
+        color: var(--muted);
+      }
+      .empty .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 16px;
+      }
+      .empty p {
+        font-size: 1.05rem;
+      }
+      @media (max-width: 780px) {
+        .modal-content {
+          grid-template-columns: 1fr;
+          max-height: 88vh;
+          overflow-y: auto;
+        }
+        .modal-left {
+          height: 220px;
+        }
+        .modal-right {
+          padding: 28px 24px 32px;
+        }
+        #m-title {
+          font-size: 1.5rem;
+        }
+        #m-link {
+          position: sticky;
+          bottom: 0;
+          background: var(--card-bg);
+          padding-bottom: 4px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="backToTop">
+      <a href="#hero" aria-label="Về đầu trang">↑</a>
+    </div>
+    <section class="hero" id="hero">
+      <h1>VIỆT NAM</h1>
+      <p>Hành trình học tập</p>
+      <p
+        style="
+          font-size: 1.1rem;
+          font-weight: 400;
+          max-width: 650px;
+          margin-top: 16px;
+          opacity: 0.9;
+        "
+      >
+        Hệ thống hóa kiến thức chuyên sâu, rèn luyện kỹ năng thực hành. Người
+        bạn đồng hành trên con đường chinh phục các kỳ thi học sinh giỏi.
+      </p>
+    </section>
+    <div class="controls-wrap">
+      <div class="controls">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-box"
+          placeholder="🔍  Tìm tài liệu..."
+        />
+        <button class="filter-btn active" data-region="all">Tất cả</button>
+        <button class="filter-btn" data-region="Đề thi HSG">Đề thi HSG</button>
+        <button class="filter-btn" data-region="Chuyên đề">Chuyên đề</button>
+        <button class="filter-btn" data-region="Đề thi chuyên">
+          Đề thi chuyên
+        </button>
+        <p class="result-count" id="resultCount"></p>
+      </div>
+    </div>
+    <main class="main-content">
+      <div class="grid" id="provincesGrid"></div>
+    </main>
+    <div class="modal" id="modal">
+      <div class="modal-content">
+        <div class="close-btn" onclick="closeModal()">✕</div>
+        <div class="modal-left"><img id="m-img" src="" alt="" /></div>
+        <div class="modal-right">
+          <span class="m-badge" id="m-region"></span>
+          <h2 id="m-title"></h2>
+          <p id="m-desc"></p>
+          <a id="m-link" href="#" target="_blank" rel="noopener noreferrer">
+            <button>Mở tài liệu →</button>
+          </a>
+        </div>
+      </div>
+    </div>
+    <script>
+      const provinces = [
+        {
+          id: 1,
+          name: "Các vùng kinh tế 2026",
+          region: "Chuyên đề",
+          image: "./b0ead028014e8010d95f2.jpg",
+          description:
+            "Tổng hợp kiến thức chuyên sâu về 6 vùng kinh tế Việt Nam theo chương trình mới 2026. Phân tích thế mạnh, thực trạng và định hướng phát triển từng vùng — trọng tâm cho mọi đề thi HSG cấp tỉnh và quốc gia.",
+          url: "https://docs.google.com/document/d/1RfdRSVx8kdXvZScpLAOdNsqt2poaxHE0/edit?usp=drive_link&ouid=112199192104541563787&rtpof=true&sd=true",
+        },
+        {
+          id: 2,
+          name: "Bồi dưỡng HSGTHPT",
+          region: "Chuyên đề",
+          image: "./2888d74b062d8773de3c1.jpg",
+          description:
+            "Tài liệu bồi dưỡng học sinh giỏi địa lý lớp 12 theo chương trình GDPT 2018. Cập nhật số liệu mới nhất, bám sát cấu trúc đề thi, phù hợp luyện tập phân tích biểu đồ và viết nhận xét.",
+          url: "https://drive.google.com/file/d/1GWj_qzcTe3h7zX1SYz7Fxwq5Bts3zx6A/view?usp=sharing",
+        },
+        {
+          id: 3,
+          name: "Tự nhiên · Dân cư · Nông nghiệp",
+          region: "Chuyên đề",
+          image: "./z7724678840960_a5d161c2467e1ddbab287be784b6fd49.jpg",
+          description:
+            "Bộ chuyên đề ba-trong-một: địa lý tự nhiên (địa hình, khí hậu, sông ngòi), dân số và phân bố dân cư, cùng ngành nông — lâm — ngư nghiệp. Lý tưởng để ôn tập hệ thống trước kỳ thi.",
+          url: "https://docs.google.com/document/d/1rGbTwt-wun8xOQr-gJewBrDP1d20MCXx/edit?usp=sharing&ouid=112199192104541563787&rtpof=true&sd=true",
+        },
+        {
+          id: 4,
+          name: "Bồi dưỡng HSG Địa lý 9",
+          region: "Chuyên đề",
+          image: "./067130b0e1d6608839c75.jpg",
+          description:
+            "Tài liệu bồi dưỡng học sinh giỏi địa lý lớp 9 theo chương trình chuẩn. Bao gồm hệ thống lý thuyết, bài tập vận dụng và các dạng câu hỏi thường gặp trong đề thi cấp huyện, cấp tỉnh.",
+          url: "https://docs.google.com/document/d/17FUr3uZh_b6KvJ8K89_yuUpsM9VKS6Pq/edit?usp=sharing&ouid=112199192104541563787&rtpof=true&sd=true",
+        },
+        {
+          id: 5,
+          name: "Tài liệu ôn HSG Địa lý 9",
+          region: "Chuyên đề",
+          image: "./515f859d54fbd5a58cea3.jpg",
+          description:
+            "Hệ thống kiến thức địa lý 9 theo chủ đề, kèm sơ đồ tư duy và câu hỏi tự luyện. Giúp học sinh nắm vững toàn bộ kiến thức địa lý tự nhiên và kinh tế-xã hội Việt Nam.",
+          url: "https://docs.google.com/document/d/1_Duw9RvZmO4clN37aWLGTBCnZg4zgRGq/edit?usp=sharing&ouid=112199192104541563787&rtpof=true&sd=true",
+        },
+        {
+          id: 6,
+          name: "16 Chuyên đề HSG Địa lý 9",
+          region: "Chuyên đề",
+          image: "./f58780465120d07e89318.jpg",
+          description:
+            "Trọn bộ 16 chuyên đề bồi dưỡng HSG địa lý 9 từ thuvienhoclieu.com. Mỗi chuyên đề đi sâu vào một mảng kiến thức quan trọng, có ví dụ minh họa và bài tập vận dụng cao.",
+          url: "https://docs.google.com/document/d/1I4VMWLCWYDx9fIpwcDetDX0HnBSdTao0/edit?usp=sharing&ouid=112199192104541563787&rtpof=true&sd=true",
+        },
+        {
+          id: 7,
+          name: "Địa lý dân cư — Bồi dưỡng HSG",
+          region: "Chuyên đề",
+          image: "./e43231f2e09461ca388510.jpg",
+          description:
+            "Chuyên đề chuyên sâu về địa lý dân cư Việt Nam: cơ cấu dân số, gia tăng dân số, phân bố và mật độ dân cư, đô thị hóa. Đặc biệt phù hợp với phần phân tích biểu đồ tháp tuổi và bảng số liệu.",
+          url: "https://docs.google.com/document/d/1TdunR50E37lHC_srzGJuTwtOCY7pLN6y/edit?usp=sharing&ouid=112199192104541563787&rtpof=true&sd=true",
+        },
+        {
+          id: 8,
+          name: "Bồi dưỡng GV sau sáp nhập tỉnh",
+          region: "Chuyên đề",
+          image: "./0c0be1c130a7b1f9e8b67.jpg",
+          description:
+            "Tài liệu cập nhật kiến thức địa lý THPT sau khi sáp nhập các tỉnh thành mới. Dành cho giáo viên cần nắm rõ thay đổi địa giới, số liệu thống kê và các vùng kinh tế theo đơn vị hành chính mới.",
+          url: "https://docs.google.com/document/d/1Gi9dPPx56ws6zOYtgGSJfCnAgzSO9y9v/edit?usp=sharing&ouid=112199192104541563787&rtpof=true&sd=true",
+        },
+        {
+          id: 9,
+          name: "Bồi dưỡng HSG Địa lý 6–7–8–9",
+          region: "Chuyên đề",
+          image: "./372ca5e37485f5dbac949.jpg",
+          description:
+            "Bộ tài liệu bồi dưỡng toàn cấp THCS từ lớp 6 đến lớp 9. Được biên soạn theo từng khối lớp, cung cấp nền tảng kiến thức vững chắc và lộ trình ôn luyện xuyên suốt 4 năm học.",
+          url: "https://docs.google.com/document/d/1rUECSNihROwjgNcWNGTZU6zrwBn_ESsS/edit?usp=sharing&ouid=112199192104541563787&rtpof=true&sd=true",
+        },
+        {
+          id: 10,
+          name: "Bắc Ninh cấp tỉnh thcs 2025-2026",
+          region: "Đề thi HSG",
+          image: "./a481af0d286ca932f07d.jpg",
+          description:
+            "Đề thi học sinh giỏi Địa lí cấp tỉnh THCS tỉnh Bắc Ninh năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1qXpICkuYscZgWW5J431Cqg0ti3aJiHnY/view?usp=sharing",
+        },
+        {
+          id: 11,
+          name: "Bắc Giang cấp tỉnh thcs 2025-2026",
+          region: "Đề thi HSG",
+          image: "./e2583fd5b8b439ea60a5.jpg",
+          description:
+            "Đề thi học sinh giỏi Địa lí cấp tỉnh THCS tỉnh Bắc Giang năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1gmQjF3rCy6OcPeum9GSCNFbin23lOyD3/view?usp=sharing",
+        },
+        {
+          id: 12,
+          name: "Nam Định cấp tỉnh thcs 2025-2026",
+          region: "Đề thi HSG",
+          image: "./aba7ea2d6d4cec12b55d.jpg",
+          description:
+            "Đề thi học sinh giỏi Địa lí cấp tỉnh THCS tỉnh Nam Định năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1udp4AJNZh-pMj8KU1SVEPqLlOZPXQaKy/view?usp=sharing",
+        },
+        {
+          id: 13,
+          name: "Thanh Hoá cấp tỉnh thcs 2025-2026",
+          region: "Đề thi HSG",
+          image: "./thanhhoa.jpg",
+          description:
+            "Đề thi học sinh giỏi Địa lí cấp tỉnh THCS tỉnh Thanh Hoá năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1e6b3q2-d3BY6_qw1gtCT4aGl-IYbOTHl/view?usp=sharing",
+        },
+        {
+          id: 14,
+          name: "Quảng Nam cấp tỉnh thcs 2025-2026",
+          region: "Đề thi HSG",
+          image: "./quangnam.jpg",
+          description:
+            "Đề thi học sinh giỏi Địa lí cấp tỉnh THCS tỉnh Quảng Nam năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1wgYHVOXc7s_RkvoLrQolLEXYSi-MvLEA/view?usp=sharing",
+        },
+        {
+          id: 15,
+          name: "Thanh Hoá cấp tỉnh thpt 2025-2026",
+          region: "Đề thi HSG",
+          image: "./thpt1.jpg",
+          description:
+            "Đề thi học sinh giỏi Địa lí cấp tỉnh THPT tỉnh Thanh Hoá năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/10rm6eFV_Z622YLn2losj55HVvPadx62L/view?usp=sharing",
+        },
+        {
+          id: 16,
+          name: "Hải Phòng cấp tỉnh thpt 2025-2026",
+          region: "Đề thi HSG",
+          image: "./thpt3.jpg",
+          description:
+            "Đề thi học sinh giỏi Địa lí cấp tỉnh THPT thành phố Hải Phòng năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1cjy_0FVSc14R1NFBgVmzoimAVcIhQVFr/view?usp=sharing",
+        },
+        {
+          id: 17,
+          name: "Đắk Lắk cấp tỉnh thpt 2025-2026",
+          region: "Đề thi HSG",
+          image: "./thpt2.jpg",
+          description:
+            "Đề thi học sinh giỏi Địa lí cấp tỉnh THPT tỉnh Đắk Lắk năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1bkll3CNekGaPcOUJzdUiR7S2_ktEWCLE/view?usp=sharing",
+        },
+        {
+          id: 18,
+          name: "Hưng Yên cấp tỉnh thpt 2025-2026",
+          region: "Đề thi HSG",
+          image: "./thpt4.jpg",
+          description:
+            "Đề thi học sinh giỏi Địa lí cấp tỉnh THPT tỉnh Hưng Yên năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1UOL5RoVmtZQIfU-sqayWSdiyPR2ByPNj/view?usp=sharing",
+        },
+        {
+          id: 19,
+          name: "Hưng Yên cấp tỉnh thcs 2025-2026",
+          region: "Đề thi HSG",
+          image: "./thcs1.jpg",
+          description:
+            "Đề thi học sinh giỏi Địa lí cấp tỉnh THCS tỉnh Hưng Yên năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1lKSYOGdh5Y0c_sDhm4F8WWA83aYs5oip/view?usp=sharing",
+        },
+        {
+          id: 20,
+          name: "Hà Tĩnh cấp tỉnh thpt 2025-2026",
+          region: "Đề thi HSG",
+          image: "./thpt5.jpg",
+          description:
+            "Đề thi học sinh giỏi Địa lí cấp tỉnh THPT tỉnh Hà Tĩnh năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1mMZGDQGJvsBBiDpw1HKmpOsftFGFCSsG/view?usp=sharing",
+        },
+        {
+          id: 21,
+          name: "Chuyên địa Hà Tĩnh 2024-2025",
+          region: "Đề thi chuyên",
+          image: "./chuyen1.jpg",
+          description:
+            "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên Hà Tĩnh năm học 2024-2025.",
+          url: "https://drive.google.com/file/d/1cZEm-3gj155KEeZrzyu9fM_x5al1E3Q7/view?usp=sharing",
+        },
+        {
+          id: 23,
+          name: "Đề thi HSGQG 2023-2024",
+          region: "Đề thi HSG",
+          image: "./hsgqg1.jpg",
+          description:
+            "Đề thi học sinh giỏi Quốc gia môn Địa lí năm học 2023-2024.",
+          url: "https://drive.google.com/file/d/1Y87BAtbGDQ8ZZIjvJW0LHmYl9Mkwj2V7/view?usp=sharing",
+        },
+        {
+          id: 24,
+          name: "Đề thi HSGQG 2024-2025",
+          region: "Đề thi HSG",
+          image: "./hsgqg3.jpg",
+          description:
+            "Đề thi học sinh giỏi Quốc gia môn Địa lí năm học 2024-2025.",
+          url: "https://drive.google.com/file/d/1-1xEoBLJZqiUDQVPkct8DuDofK11SO6K/view?usp=sharing",
+        },
+        {
+          id: 25,
+          name: "Đề thi HSGQG 2025-2026",
+          region: "Đề thi HSG",
+          image: "./hsgqg2.jpg",
+          description:
+            "Đề thi học sinh giỏi Quốc gia môn Địa lí năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1WM9XTnxdB2s4tUV1qNTTO-LGELmnjBEm/view?usp=sharing",
+        },
+        {
+          id: 22,
+          name: "Đề thi HSGQG 2022-2023",
+          region: "Đề thi HSG",
+          image: "./hsgqg4.jpg",
+          description:
+            "Đề thi học sinh giỏi Quốc gia môn Địa lí năm học 2022-2023.",
+          url: "https://drive.google.com/file/d/1gwp8o7TDMb2YqVLA9eMBqyhCpZR6wAGN/view?usp=sharing",
+        },
+        {
+          id: 26,
+          name: "Chuyên địa Hà Nội 2025-2026",
+          region: "Đề thi chuyên",
+          image: "./chuyen2.jpg",
+          description:
+            "Đề thi tuyển sinh lớp 10 chuyên Địa lí các trường THPT Chuyên tại Hà Nội năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/18RQVMlQMv_sb8CM7O4hCGJW4dpeurWG0/view?usp=sharing",
+        },
+        {
+          id: 27,
+          name: "Chuyên địa TP.HCM 2024-2025",
+          region: "Đề thi chuyên",
+          image: "./chuyen3.jpg",
+          description:
+            "Đề thi tuyển sinh lớp 10 chuyên Địa lí các trường THPT Chuyên tại TP. Hồ Chí Minh năm học 2024-2025.",
+          url: "https://drive.google.com/file/d/1TOOVfenIgH2cMjzPi-g0-c6geHf4t4NG/view?usp=sharing",
+        },
+        {
+          id: 28,
+          name: "Vùng Nam Trung Bộ",
+          region: "Chuyên đề",
+          image: "./bu1.jpg",
+          description:
+            "Chuyên đề Địa lí vùng Nam Trung Bộ: đặc điểm tự nhiên, dân cư, kinh tế – xã hội.",
+          url: "https://drive.google.com/file/d/1KrUC8qoMoi7pJ9UL2Xb6TspFzuxADSOQ/view?usp=sharing",
+        },
+        {
+          id: 29,
+          name: "Vùng Bắc Trung Bộ",
+          region: "Chuyên đề",
+          image: "./bu2.jpg",
+          description:
+            "Chuyên đề Địa lí vùng Bắc Trung Bộ: đặc điểm tự nhiên, dân cư, kinh tế – xã hội.",
+          url: "https://drive.google.com/file/d/1qgjDZomfuPT8npL2rEr3qgPmJ5m2Vkml/view?usp=sharing",
+        },
+        {
+          id: 30,
+          name: "Vùng Đông Nam Bộ",
+          region: "Chuyên đề",
+          image: "./bu3.jpg",
+          description:
+            "Chuyên đề Địa lí vùng Đông Nam Bộ: đặc điểm tự nhiên, dân cư, kinh tế – xã hội.",
+          url: "https://drive.google.com/file/d/1pOoYFZQy4JC2FpiIR03lYkDqAhC9FRa_/view?usp=sharing",
+        },
+        {
+          id: 31,
+          name: "Vùng đồng bằng sông Cửu Long",
+          region: "Chuyên đề",
+          image: "./bu4.jpg",
+          description:
+            "Chuyên đề Địa lí vùng Đồng bằng sông Cửu Long: đặc điểm tự nhiên, dân cư, kinh tế – xã hội.",
+          url: "https://drive.google.com/file/d/190fLqQRI9NXpMaMqfROHG8NR4CFjqXB4/view?usp=sharing",
+        },
+        {
+          id: 32,
+          name: "Vùng đồng bằng sông Hồng",
+          region: "Chuyên đề",
+          image: "./bu5.jpg",
+          description:
+            "Chuyên đề Địa lí vùng Đồng bằng sông Hồng: đặc điểm tự nhiên, dân cư, kinh tế – xã hội.",
+          url: "https://drive.google.com/file/d/1EsnjbFx4Ov1vnCuI9Z0bP5M7YoCtNCOO/view?usp=sharing",
+        },
+        {
+          id: 33,
+          name: "Địa lý các vùng kinh tế Việt Nam",
+          region: "Chuyên đề",
+          image: "./bu6.jpg",
+          description:
+            "Tổng hợp Địa lí các vùng kinh tế Việt Nam: so sánh, phân tích đặc trưng từng vùng.",
+          url: "https://drive.google.com/file/d/1_mYCMDt2hzRz-0ez67LZE6SpT_JeJora/view?usp=sharing",
+        },
+        {
+          id: 34,
+          name: "Nông nghiệp - lâm nghiệp - thuỷ sản",
+          region: "Chuyên đề",
+          image: "./bu7.jpg",
+          description:
+            "Chuyên đề các ngành nông nghiệp, lâm nghiệp và thuỷ sản Việt Nam theo chương trình mới.",
+          url: "https://drive.google.com/file/d/1IPBIVVeUg9jcp2oKiN5TLzlUXMVRWc4V/view?usp=sharing",
+        },
+        {
+          id: 35,
+          name: "Ngành dịch vụ Việt Nam",
+          region: "Chuyên đề",
+          image: "./bu8.jpg",
+          description:
+            "Chuyên đề ngành dịch vụ Việt Nam: thương mại, du lịch, giao thông vận tải và bưu chính viễn thông.",
+          url: "https://drive.google.com/file/d/1VkR9020Nx801gDiZ6FcqLyksmj3H2kvS/view?usp=sharing",
+        },
+        {
+          id: 36,
+          name: "Công nghiệp Việt Nam (theo thông tư 17)",
+          region: "Chuyên đề",
+          image: "./bu9.jpg",
+          description:
+            "Chuyên đề công nghiệp Việt Nam biên soạn theo thông tư 17, cập nhật nội dung chương trình mới.",
+          url: "https://drive.google.com/file/d/1TQEoXLh5BMwRfmh5q36-VrEgIQmlWnpP/view?usp=sharing",
+        },
+        {
+          id: 37,
+          name: "THPT Chuyên KHXH&NV 2024-2025",
+          region: "Đề thi chuyên",
+          image: "./chuyen4.jpg",
+          description:
+            "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên Khoa học Xã hội & Nhân văn năm học 2024-2025.",
+          url: "https://drive.google.com/file/d/1sH-aIz0CbqGOC86DN0qIafL_r0Lhsriy/view?usp=sharing",
+        },
+        {
+          id: 38,
+          name: "Chuyên Hạ Long 2025-2026",
+          region: "Đề thi chuyên",
+          image: "./chuyen5.jpg",
+          description:
+            "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên Hạ Long năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1HxTmZ6btZjawKwdqH9a6oe8sovele8hw/view?usp=sharing",
+        },
+        {
+          id: 39,
+          name: "Chuyên Vĩnh Phúc 2025-2026",
+          region: "Đề thi chuyên",
+          image: "./chuyen6.jpg",
+          description:
+            "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên Vĩnh Phúc năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1-GjLSWtf6ROzC2dFfMr3cnG7JyXWToQ2/view?usp=sharing",
+        },
+        {
+          id: 40,
+          name: "Chuyên Nguyễn Trãi 2025-2026",
+          region: "Đề thi chuyên",
+          image: "./chuyen7.jpg",
+          description:
+            "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên Nguyễn Trãi năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1k9KVfHIBvyX-VBiz_lbsrZlOBFJfE6K2/view?usp=sharing",
+        },
+        {
+          id: 41,
+          name: "Chuyên Hưng Yên 2025-2026",
+          region: "Đề thi chuyên",
+          image: "./chuyen8.jpg",
+          description:
+            "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên Hưng Yên năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1bd1vJutCmj_XtUpDLTZm03O3Fzl7QPyQ/view?usp=sharing",
+        },
+        {
+          id: 42,
+          name: "Chuyên Tuyên Quang 2025-2026",
+          region: "Đề thi chuyên",
+          image: "./chuyen9.jpg",
+          description:
+            "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên Tuyên Quang năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1mh6kzrRnRpbQS4db3OAG_x4Gbv1xVYfa/view?usp=sharing",
+        },
+        {
+          id: 43,
+          name: "Chuyên Quảng Nam 2025-2026",
+          region: "Đề thi chuyên",
+          image: "./chuyen10.jpg",
+          description:
+            "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên Quảng Nam năm học 2025-2026.",
+          url: "https://drive.google.com/file/d/1uqnhTZmZk9eHCezBMKNb9ztQT3Ngqplo/view?usp=sharing",
+        },
+      ];
+      const grid = document.getElementById("provincesGrid");
+      const searchInput = document.getElementById("searchInput");
+      const resultCount = document.getElementById("resultCount");
+      let currentFilter = "all";
+      function render(data) {
+        if (data.length === 0) {
+          grid.innerHTML = `
+            <div class="empty">
+              <div class="empty-icon">🔍</div>
+              <p>Không tìm thấy tài liệu phù hợp với "<strong>${searchInput.value}</strong>"</p>
+            </div>`;
+          resultCount.textContent = "";
+          return;
+        }
+        resultCount.textContent = `Hiển thị ${data.length} tài liệu`;
+        grid.innerHTML = data
+          .map(
+            (p, i) => `
+          <div class="card" style="animation-delay:${i * 0.06}s" onclick="openModal(${p.id})">
+            <div class="card-img-wrapper">
+              <span class="region-tag">${p.region}</span>
+              <img src="${p.image}" alt="${p.name}" loading="lazy" />
+            </div>
+            <div class="card-body">
+              <h3>${p.name}</h3>
+              <p>${p.description.substring(0, 110)}…</p>
+              <div class="card-cta">
+                Xem chi tiết
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+      }
+      function removeVietnameseTones(str) {
+        return str
+          .replace(/[àáạảãâầấậẩẫăằắặẳẵ]/g, "a")
+          .replace(/[èéẹẻẽêềếệểễ]/g, "e")
+          .replace(/[ìíịỉĩ]/g, "i")
+          .replace(/[òóọỏõôồốộổỗơờớợởỡ]/g, "o")
+          .replace(/[ùúụủũưừứựửữ]/g, "u")
+          .replace(/[ỳýỵỷỹ]/g, "y")
+          .replace(/đ/g, "d")
+          .replace(/[ÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴ]/g, "A")
+          .replace(/[ÈÉẸẺẼÊỀẾỆỂỄ]/g, "E")
+          .replace(/[ÌÍỊỈĨ]/g, "I")
+          .replace(/[ÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠ]/g, "O")
+          .replace(/[ÙÚỤỦŨƯỪỨỰỬỮ]/g, "U")
+          .replace(/[ỲÝỴỶỸ]/g, "Y")
+          .replace(/Đ/g, "D");
+      }
+      function handleFilter() {
+        const term = removeVietnameseTones(
+          searchInput.value.toLowerCase().trim(),
+        );
+        const filtered = provinces.filter((p) => {
+          const name = removeVietnameseTones(p.name.toLowerCase());
+          const desc = removeVietnameseTones(p.description.toLowerCase());
+          const matchSearch =
+            !term || name.includes(term) || desc.includes(term);
+          const matchRegion =
+            currentFilter === "all" || p.region === currentFilter;
+          return matchSearch && matchRegion;
+        });
+        render(filtered);
+      }
+      searchInput.addEventListener("input", handleFilter);
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelector(".filter-btn.active")
+            .classList.remove("active");
+          btn.classList.add("active");
+          currentFilter = btn.dataset.region;
+          handleFilter();
+        });
+      });
+      function openModal(id) {
+        const p = provinces.find((x) => x.id === id);
+        if (!p) return;
+        document.getElementById("m-title").textContent = p.name;
+        document.getElementById("m-img").src = p.image;
+        document.getElementById("m-img").alt = p.name;
+        document.getElementById("m-desc").textContent = p.description;
+        document.getElementById("m-region").textContent = p.region;
+        const link = document.getElementById("m-link");
+        link.href = p.url || "#";
+        const m = document.getElementById("modal");
+        m.style.display = "flex";
+        requestAnimationFrame(() => m.classList.add("active"));
+        document.body.style.overflow = "hidden";
+      }
+      function closeModal() {
+        const m = document.getElementById("modal");
+        m.classList.remove("active");
+        setTimeout(() => {
+          m.style.display = "none";
+          document.body.style.overflow = "";
+        }, 350);
+      }
+      document.getElementById("modal").addEventListener("click", (e) => {
+        if (e.target === document.getElementById("modal")) closeModal();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeModal();
+      });
+      const btt = document.getElementById("backToTop");
+      window.addEventListener("scroll", () => {
+        btt.style.display = window.scrollY > 300 ? "block" : "none";
+      });
+      render(provinces);
+    </script>
+  </body>
+</html>
