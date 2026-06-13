@@ -1,10 +1,18 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
   <head>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
     <meta charset="UTF-8" />
+    <meta
+      property="og:title"
+      content="Việt Nam - Tài liệu học tập địa lý Việt Nam"
+    />
+    <meta
+      property="og:description"
+      content="Hành trình học tập ngày một giỏi hơn về địa lý Việt Nam"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="shortcut icon"
@@ -68,8 +76,10 @@
       }
       .hero {
         height: 50vh;
-        background:
-          linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.4)),
+        background: linear-gradient(
+            rgba(15, 23, 42, 0.6),
+            rgba(15, 23, 42, 0.4)
+          ),
           url("https://images.unsplash.com/photo-1528127269322-539801943592?q=80&w=2000");
         background-size: cover;
         background-position: center;
@@ -163,9 +173,7 @@
         border: 1px solid var(--border);
         overflow: hidden;
         cursor: pointer;
-        transition:
-          transform 0.35s var(--ease),
-          box-shadow 0.35s var(--ease);
+        transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
         display: flex;
         flex-direction: column;
         animation: fadeUp 0.5s var(--ease) both;
@@ -354,9 +362,7 @@
         font-size: 0.95rem;
         font-weight: 600;
         cursor: pointer;
-        transition:
-          background 0.25s,
-          transform 0.2s;
+        transition: background 0.25s, transform 0.2s;
         letter-spacing: 0.02em;
       }
       #m-link button:hover {
@@ -385,6 +391,43 @@
       .close-btn:hover {
         color: var(--ink);
       }
+      #backButton {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 999;
+      }
+      #backButton a {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 44px;
+        padding: 0 18px;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        text-decoration: none;
+        color: var(--ink);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        transition: all 0.25s var(--ease);
+        white-space: nowrap;
+      }
+      #backButton a:hover {
+        background: var(--ink);
+        color: white;
+        transform: translateX(-3px);
+        border-color: var(--ink);
+      }
+      #backButton a svg {
+        transition: transform 0.2s;
+      }
+      #backButton a:hover svg {
+        transform: translateX(-3px);
+      }
       #backToTop {
         position: fixed;
         bottom: 28px;
@@ -402,9 +445,7 @@
         border-radius: 12px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
         text-decoration: none;
-        transition:
-          transform 0.2s,
-          background 0.2s;
+        transition: transform 0.2s, background 0.2s;
         color: white;
         font-size: 1.1rem;
       }
@@ -450,6 +491,23 @@
     </style>
   </head>
   <body>
+    <div id="backButton">
+      <a
+        href="https://giabao123123.github.io/VietNam/"
+        aria-label="Quay lại trang trước"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M13 8H3M7 4L3 8l4 4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        Quay lại
+      </a>
+    </div>
     <div id="backToTop">
       <a href="#hero" aria-label="Về đầu trang">↑</a>
     </div>
@@ -1087,7 +1145,9 @@
         grid.innerHTML = data
           .map(
             (p, i) => `
-          <div class="card" style="animation-delay:${i * 0.06}s" onclick="openModal(${p.id})">
+          <div class="card" style="animation-delay:${
+            i * 0.06
+          }s" onclick="openModal(${p.id})">
             <div class="card-img-wrapper">
               <span class="region-tag">${p.region}</span>
               <img src="${p.image}" alt="${p.name}" loading="lazy" />
