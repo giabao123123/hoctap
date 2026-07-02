@@ -6,6 +6,11 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
     <meta charset="UTF-8" />
     <meta
+      name="description"
+      content="Hành trình học tập ngày một giỏi hơn về địa lý Việt Nam"
+    />
+    <meta name="theme-color" content="#b45309" />
+    <meta
       property="og:title"
       content="Việt Nam - Tài liệu học tập địa lý Việt Nam"
     />
@@ -54,7 +59,7 @@
         --primary: #b45309;
         --accent: #d97706;
         --light: #fef9f0;
-        --muted: #78716c;
+        --muted: #6b6359;
         --border: #e7e0d5;
         --card-bg: #fffdf9;
         --radius: 16px;
@@ -95,6 +100,49 @@
         font-size: clamp(2rem, 6vw, 4rem);
         font-weight: 800;
         letter-spacing: -1px;
+      }
+      .hero .tagline {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 14px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: #fde8c8;
+      }
+      .hero .tagline::before,
+      .hero .tagline::after {
+        content: "";
+        width: 28px;
+        height: 1px;
+        background: #fde8c8;
+        opacity: 0.6;
+      }
+      .hero-stats {
+        display: flex;
+        gap: 28px;
+        margin-top: 26px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .hero-stats div {
+        text-align: center;
+      }
+      .hero-stats strong {
+        display: block;
+        font-family: "Playfair Display", serif;
+        font-size: 1.5rem;
+        color: #fde8c8;
+        line-height: 1.1;
+      }
+      .hero-stats span {
+        font-size: 0.68rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.78;
       }
       .controls-wrap {
         max-width: 1200px;
@@ -466,6 +514,22 @@
       .empty p {
         font-size: 1.05rem;
       }
+      /* Keyboard accessibility: visible focus ring on every interactive
+         element (cards are made focusable below since they were plain
+         divs with only an onclick handler — unreachable by keyboard) */
+      a:focus-visible,
+      button:focus-visible,
+      input:focus-visible,
+      .card:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 8px;
+      }
+      .card:focus-visible { transform: translateY(-6px); }
+      .close-btn {
+        border: 1px solid var(--border);
+        font-family: inherit;
+      }
       @media (max-width: 780px) {
         .modal-content {
           grid-template-columns: 1fr;
@@ -513,7 +577,7 @@
     </div>
     <section class="hero" id="hero">
       <h1>VIỆT NAM</h1>
-      <p>Hành trình học tập</p>
+      <p class="tagline">Hành trình học tập</p>
       <p
         style="
           font-size: 1.1rem;
@@ -526,6 +590,7 @@
         Hệ thống hóa kiến thức chuyên sâu, rèn luyện kỹ năng thực hành. Người
         bạn đồng hành trên con đường chinh phục các kỳ thi học sinh giỏi.
       </p>
+      <div class="hero-stats" id="heroStats"></div>
     </section>
     <div class="controls-wrap">
       <div class="controls">
@@ -534,29 +599,42 @@
           id="searchInput"
           class="search-box"
           placeholder="🔍  Tìm tài liệu..."
+          aria-label="Tìm tài liệu"
         />
-        <button class="filter-btn active" data-region="all">Tất cả</button>
-        <button class="filter-btn" data-region="Đề thi HSG">Đề thi HSG</button>
-        <button class="filter-btn" data-region="Chuyên đề">Chuyên đề</button>
-        <button class="filter-btn" data-region="Đề thi chuyên">
+        <button type="button" class="filter-btn active" data-region="all" aria-pressed="true">Tất cả</button>
+        <button type="button" class="filter-btn" data-region="Đề thi HSG" aria-pressed="false">Đề thi HSG</button>
+        <button type="button" class="filter-btn" data-region="Chuyên đề" aria-pressed="false">Chuyên đề</button>
+        <button type="button" class="filter-btn" data-region="Đề thi chuyên" aria-pressed="false">
           Đề thi chuyên
         </button>
-        <p class="result-count" id="resultCount"></p>
+        <p class="result-count" id="resultCount" aria-live="polite"></p>
       </div>
     </div>
     <main class="main-content">
       <div class="grid" id="provincesGrid"></div>
     </main>
-    <div class="modal" id="modal">
-      <div class="modal-content">
-        <div class="close-btn" onclick="closeModal()">✕</div>
+    <div class="modal" id="modal" aria-hidden="true">
+      <div
+        class="modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="m-title"
+      >
+        <button
+          type="button"
+          class="close-btn"
+          onclick="closeModal()"
+          aria-label="Đóng"
+        >
+          ✕
+        </button>
         <div class="modal-left"><img id="m-img" src="" alt="" /></div>
         <div class="modal-right">
           <span class="m-badge" id="m-region"></span>
           <h2 id="m-title"></h2>
           <p id="m-desc"></p>
           <a id="m-link" href="#" target="_blank" rel="noopener noreferrer">
-            <button>Mở tài liệu →</button>
+            <button type="button">Mở tài liệu →</button>
           </a>
         </div>
       </div>
@@ -955,7 +1033,7 @@
           name: "Chuyên Lê Quý Đôn 2025-2026",
           region: "Đề thi chuyên",
           image: "./chuyen11.jpg",
-          description: "",
+          description: "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên Lê Quý Đôn năm học 2025-2026.",
           url: "https://drive.google.com/file/d/1PNLOsqUXdK42tUCFGZQX_ce858kNAvDh/view?usp=sharing",
         },
         {
@@ -963,7 +1041,7 @@
           name: "THPT Chuyên KHXH&NV 2025-2026",
           region: "Đề thi chuyên",
           image: "./chuyen12.jpg",
-          description: "",
+          description: "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên Khoa học Xã hội và Nhân văn năm học 2025-2026.",
           url: "https://drive.google.com/file/d/1-SdOI_g_jNubPq7fs3c-jLrUbW2AmhKW/view?usp=sharing",
         },
         {
@@ -971,7 +1049,7 @@
           name: "Chuyên Hải Dương 2024-2025",
           region: "Đề thi chuyên",
           image: "./chuyen13.jpg",
-          description: "",
+          description: "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên tỉnh Hải Dương năm học 2024-2025.",
           url: "https://drive.google.com/file/d/1hWLcRS9zAqkTmdUWo_SKSKUQxyzV_ReP/view?usp=sharing",
         },
         {
@@ -979,7 +1057,7 @@
           name: "Chuyên Đắk Lắk 2024-2025",
           region: "Đề thi chuyên",
           image: "./chuyen14.jpg",
-          description: "",
+          description: "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên tỉnh Đắk Lắk năm học 2024-2025.",
           url: "https://drive.google.com/file/d/1XQmwhbMDf62rEFl8Mg3YqIwjKtk3jkIx/view?usp=sharing",
         },
         {
@@ -987,7 +1065,7 @@
           name: "Chuyên Hưng Yên 2024-2025",
           region: "Đề thi chuyên",
           image: "./chuyen15.jpg",
-          description: "",
+          description: "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên tỉnh Hưng Yên năm học 2024-2025.",
           url: "https://drive.google.com/file/d/1pm1RQRHqjx2xsNw5QYdFqUZHhdhM4GH2/view?usp=sharing",
         },
         {
@@ -995,7 +1073,7 @@
           name: "Chuyên Vĩnh Phúc 2024-2025",
           region: "Đề thi chuyên",
           image: "./chuyen16.jpg",
-          description: "",
+          description: "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên tỉnh Vĩnh Phúc năm học 2024-2025.",
           url: "https://drive.google.com/file/d/11g0-QsMrWFGkM6W_Tc2i7ddeObdad4vJ/view?usp=sharing",
         },
         {
@@ -1003,7 +1081,7 @@
           name: "Chuyên Nam Định 2024-2025",
           region: "Đề thi chuyên",
           image: "./chuyen17.jpg",
-          description: "",
+          description: "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên tỉnh Nam Định năm học 2024-2025.",
           url: "https://drive.google.com/file/d/1CZ6HXvob6lLPBSqUToany5IsJ1U3Tu_L/view?usp=sharing",
         },
         {
@@ -1011,7 +1089,7 @@
           name: "Chuyên Quảng Ninh 2025-2026",
           region: "Đề thi chuyên",
           image: "./chuyen18.jpg",
-          description: "",
+          description: "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên tỉnh Quảng Ninh năm học 2025-2026.",
           url: "https://drive.google.com/file/d/1O_-t4nWJuIgtqaxVqA7149EYMUt0Nkw2/view?usp=sharing",
         },
         {
@@ -1019,7 +1097,7 @@
           name: "Chuyên Tiền Giang 2025-2026",
           region: "Đề thi chuyên",
           image: "./chuyen19.jpg",
-          description: "",
+          description: "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên tỉnh Tiền Giang năm học 2025-2026.",
           url: "https://drive.google.com/file/d/1WbUqmIwUwaA5AHvPIcFTLLYb5059B5KL/view?usp=sharing",
         },
         {
@@ -1027,7 +1105,7 @@
           name: "Chuyên Thái Bình 2025-2026",
           region: "Đề thi chuyên",
           image: "./chuyen20.jpg",
-          description: "",
+          description: "Đề thi tuyển sinh lớp 10 chuyên Địa lí trường THPT Chuyên tỉnh Thái Bình năm học 2025-2026.",
           url: "https://drive.google.com/file/d/1VvV8Rqn2QImdprFzvRqVDtIj4_rxyLZY/view?usp=sharing",
         },
         {
@@ -1035,7 +1113,7 @@
           name: "Đề thi HSG THCS cấp tỉnh tỉnh Đồng Tháp 2024-2025",
           region: "Đề thi HSG",
           image: "./thpt6.jpg",
-          description: "",
+          description: "Đề thi học sinh giỏi Địa lí cấp tỉnh THCS tỉnh Đồng Tháp năm học 2024-2025.",
           url: "https://drive.google.com/file/d/1AUzD7TUODLIJPAPToFpYjkgZyfgH8xQM/view?usp=sharing",
         },
         {
@@ -1043,7 +1121,7 @@
           name: "Đề thi HSG THPT cấp tỉnh tỉnh Vĩnh Long 2025-2026",
           region: "Đề thi HSG",
           image: "./thpt7.jpg",
-          description: "",
+          description: "Đề thi học sinh giỏi Địa lí cấp tỉnh THPT tỉnh Vĩnh Long năm học 2025-2026.",
           url: "https://drive.google.com/file/d/1Vhe_vK3l5ScsE2TodRRURtJaGrDbqCLO/view?usp=sharing",
         },
         {
@@ -1051,7 +1129,7 @@
           name: "Đề thi HSG THPT cấp tỉnh tỉnh Vĩnh Long 2023-2024",
           region: "Đề thi HSG",
           image: "./thpt8.jpg",
-          description: "",
+          description: "Đề thi học sinh giỏi Địa lí cấp tỉnh THPT tỉnh Vĩnh Long năm học 2023-2024.",
           url: "https://drive.google.com/file/d/1bm9IHxFJPS3tJkX8bIW5sppT99dCkdUT/view?usp=sharing",
         },
         {
@@ -1059,7 +1137,7 @@
           name: "Đề thi HSG THPT cấp tỉnh tỉnh Vĩnh Long 2022-2023",
           region: "Đề thi HSG",
           image: "./thpt9.jpg",
-          description: "",
+          description: "Đề thi học sinh giỏi Địa lí cấp tỉnh THPT tỉnh Vĩnh Long năm học 2022-2023.",
           url: "https://drive.google.com/file/d/1o0dY5-Ckg6rHTnPlsQLJC3pE_OjoOUVn/view?usp=sharing",
         },
         {
@@ -1067,7 +1145,7 @@
           name: "Đề thi HSG THPT cấp tỉnh tỉnh Vĩnh Long 2024-2025",
           region: "Đề thi HSG",
           image: "./thpt10.jpg",
-          description: "",
+          description: "Đề thi học sinh giỏi Địa lí cấp tỉnh THPT tỉnh Vĩnh Long năm học 2024-2025.",
           url: "https://drive.google.com/file/d/1Y9ZPkbEDMkQEX8KKx2EDtkqjKbvlb6u6/view?usp=sharing",
         },
         {
@@ -1075,7 +1153,7 @@
           name: "Đề thi HSG THCS cấp tỉnh tỉnh Vĩnh Long 2025-2026",
           region: "Đề thi HSG",
           image: "./thcs2.jpg",
-          description: "",
+          description: "Đề thi học sinh giỏi Địa lí cấp tỉnh THCS tỉnh Vĩnh Long năm học 2025-2026.",
           url: "https://drive.google.com/file/d/1hCy1fDrCEVeU_RTSTKZpce39a023f0HI/view?usp=sharing",
         },
         {
@@ -1083,7 +1161,7 @@
           name: "Đề thi HSG THCS cấp tỉnh tỉnh Quảng Trị 2024-2025",
           region: "Đề thi HSG",
           image: "./thcs3.jpg",
-          description: "",
+          description: "Đề thi học sinh giỏi Địa lí cấp tỉnh THCS tỉnh Quảng Trị năm học 2024-2025.",
           url: "https://drive.google.com/file/d/1Z8UVNddMb1WKkBAGNIJTN0kS-YZMaYLQ/view?usp=sharing",
         },
         {
@@ -1091,7 +1169,7 @@
           name: "Đề thi HSG THPT cấp tỉnh tỉnh Bắc Ninh 2024-2025",
           region: "Đề thi HSG",
           image: "./thpt11.jpg",
-          description: "",
+          description: "Đề thi học sinh giỏi Địa lí cấp tỉnh THPT tỉnh Bắc Ninh năm học 2024-2025.",
           url: "https://drive.google.com/file/d/1poss9Dk7gXuZ5_U3idx0gE3DSd-sCu4F/view?usp=sharing",
         },
         {
@@ -1099,7 +1177,7 @@
           name: "Đề thi HSG THPT cấp tỉnh tỉnh Bình Dương 2024-2025",
           region: "Đề thi HSG",
           image: "./thpt12.jpg",
-          description: "",
+          description: "Đề thi học sinh giỏi Địa lí cấp tỉnh THPT tỉnh Bình Dương năm học 2024-2025.",
           url: "https://drive.google.com/file/d/1kdvUqplb87zdQjpZH6XnW481Sp30oBzf/view?usp=sharing",
         },
         {
@@ -1107,7 +1185,7 @@
           name: "Đề thi HSG THPT cấp tỉnh tỉnh Bà Rịa-Vũng Tàu 2023-2024",
           region: "Đề thi HSG",
           image: "./thpt13.jpg",
-          description: "",
+          description: "Đề thi học sinh giỏi Địa lí cấp tỉnh THPT tỉnh Bà Rịa-Vũng Tàu năm học 2023-2024.",
           url: "https://drive.google.com/file/d/1AWiKwkAVDLLVp5oqmPu5PJKAVMCktVWz/view?usp=sharing",
         },
         {
@@ -1115,7 +1193,7 @@
           name: "Đề thi HSG THPT cấp tỉnh tỉnh Hải Phòng 2024-2025",
           region: "Đề thi HSG",
           image: "./thpt14.jpg",
-          description: "",
+          description: "Đề thi học sinh giỏi Địa lí cấp tỉnh THPT thành phố Hải Phòng năm học 2024-2025.",
           url: "https://drive.google.com/file/d/1N2kDGidGOGHhxlDI6GCzoJ2fok6e8REr/view?usp=sharing",
         },
         {
@@ -1123,7 +1201,7 @@
           name: "Đề thi HSG THPT cấp tỉnh tỉnh Hải Dương 2024-2025",
           region: "Đề thi HSG",
           image: "./thpt15.jpg",
-          description: "",
+          description: "Đề thi học sinh giỏi Địa lí cấp tỉnh THPT tỉnh Hải Dương năm học 2024-2025.",
           url: "https://drive.google.com/file/d/1al4dIqdtFFk2B-3XC4eLoZYIvGwLfnQD/view?usp=sharing",
         },
       ];
@@ -1147,14 +1225,14 @@
             (p, i) => `
           <div class="card" style="animation-delay:${
             i * 0.06
-          }s" onclick="openModal(${p.id})">
+          }s" onclick="openModal(${p.id})" role="button" tabindex="0" aria-label="Xem chi tiết: ${p.name}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal(${p.id});}">
             <div class="card-img-wrapper">
               <span class="region-tag">${p.region}</span>
               <img src="${p.image}" alt="${p.name}" loading="lazy" />
             </div>
             <div class="card-body">
               <h3>${p.name}</h3>
-              <p>${p.description.substring(0, 110)}…</p>
+              <p>${p.description.length > 110 ? p.description.substring(0, 110).trim() + "…" : p.description}</p>
               <div class="card-cta">
                 Xem chi tiết
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
@@ -1166,6 +1244,13 @@
         `,
           )
           .join("");
+      }
+      function renderHeroStats() {
+        const regions = new Set(provinces.map((p) => p.region)).size;
+        document.getElementById("heroStats").innerHTML = `
+          <div><strong>${provinces.length}</strong><span>Tài liệu</span></div>
+          <div><strong>${regions}</strong><span>Danh mục</span></div>
+        `;
       }
       function removeVietnameseTones(str) {
         return str
@@ -1205,14 +1290,20 @@
           document
             .querySelector(".filter-btn.active")
             .classList.remove("active");
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.setAttribute("aria-pressed", "false"));
           btn.classList.add("active");
+          btn.setAttribute("aria-pressed", "true");
           currentFilter = btn.dataset.region;
           handleFilter();
         });
       });
+      let lastFocused = null;
       function openModal(id) {
         const p = provinces.find((x) => x.id === id);
         if (!p) return;
+        lastFocused = document.activeElement;
         document.getElementById("m-title").textContent = p.name;
         document.getElementById("m-img").src = p.image;
         document.getElementById("m-img").alt = p.name;
@@ -1222,16 +1313,22 @@
         link.href = p.url || "#";
         const m = document.getElementById("modal");
         m.style.display = "flex";
-        requestAnimationFrame(() => m.classList.add("active"));
+        m.setAttribute("aria-hidden", "false");
+        requestAnimationFrame(() => {
+          m.classList.add("active");
+          m.querySelector(".close-btn").focus();
+        });
         document.body.style.overflow = "hidden";
       }
       function closeModal() {
         const m = document.getElementById("modal");
         m.classList.remove("active");
+        m.setAttribute("aria-hidden", "true");
         setTimeout(() => {
           m.style.display = "none";
           document.body.style.overflow = "";
         }, 350);
+        if (lastFocused) lastFocused.focus();
       }
       document.getElementById("modal").addEventListener("click", (e) => {
         if (e.target === document.getElementById("modal")) closeModal();
@@ -1244,6 +1341,7 @@
         btt.style.display = window.scrollY > 300 ? "block" : "none";
       });
       render(provinces);
+      renderHeroStats();
     </script>
   </body>
 </html>
